@@ -1,5 +1,3 @@
-Sure, here's an example of a README.md file that provides instructions for setting up a Vue.js frontend and a Node.js backend with TypeScript:
-
 ---
 
 # Vue.js Frontend and Node.js Backend with TypeScript
