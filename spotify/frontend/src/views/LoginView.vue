@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto flex min-h-screen w-full items-center justify-center bg-gray-900 text-white">
+  <div class="mx-auto flex min-h-screen w-full items-center justify-center bg-neutral-900 text-white">
     <!-- component -->
     <form @submit.prevent="handleLogin" class="flex w-[30rem] flex-col space-y-10">
       <div class="text-center text-4xl font-medium">Log In</div>

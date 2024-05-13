@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { useSocketStore } from './socket.store';
 // import RegisterRequest from '../types/auth';
 
 export const useAuthStore = defineStore('auth', {
@@ -16,7 +17,6 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     setAuthenticated(data: { id: number, accessToken: string, refreshToken: string }) {
-      console.log(data)
       this.auth = true;
       this.user_id = data.user_id;
       this.refresh_token = data.refreshToken;
@@ -51,7 +51,11 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     async handleLogout() {
+      const socketStore = useSocketStore();
+
       await axios.post('/api/logout', { refreshToken: this.getRefreshToken });
+
+      socketStore.removeSocketId();
       this.auth = false;
       this.user_id = 0;
       this.refresh_token = '';

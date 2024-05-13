@@ -1,13 +1,6 @@
-<script setup lang="ts">
-  import { useAuthStore } from '../stores/auth.store';
-
-  const auth = useAuthStore();
-
-  console.log(auth.getAccessToken);
-</script>
-
 <template>
-  <div class="h-full flex items-center justify-center">
+  <div class="h-full flex flex-col gap-5 items-center justify-center">
+    <span class="text-2xl font-semibold">Join Room</span>
     <div class="grid grid-cols-3 gap-10">
       <RouterLink :to="{ name: 'chat', query: { q: 'vuejs' } }" class="inline-block rounded border-2 border-primary px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary-accent-300 hover:bg-primary-50/50 hover:text-primary-accent-300 focus:border-primary-600 focus:bg-primary-50/50 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 motion-reduce:transition-none">VueJS</RouterLink>
       <RouterLink :to="{ name: 'chat', query: { q: 'javascript' } }" class="inline-block rounded border-2 border-primary px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-primary transition duration-150 ease-in-out hover:border-primary-accent-300 hover:bg-primary-50/50 hover:text-primary-accent-300 focus:border-primary-600 focus:bg-primary-50/50 focus:text-primary-600 focus:outline-none focus:ring-0 active:border-primary-700 active:text-primary-700 motion-reduce:transition-none">JavaScript</RouterLink>
