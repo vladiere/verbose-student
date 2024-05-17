@@ -13,11 +13,14 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@jamescoyle/vue-icon": "^0.1.2",
+    "@mdi/js": "^7.4.47",
     "axios": "^1.6.8",
     "jwt-decode": "^4.0.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "socket.io-client": "^4.7.5",
+    "spotify-web-api-ts": "^1.4.5",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
     "vue-toast-notification": "^3.1.2"

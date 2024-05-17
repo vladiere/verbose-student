@@ -12,16 +12,16 @@ export const formattedString = (data: any) => {
 
   data.forEach((item, index) => {
     console.log(item.name)
-    formattedString += item.name;
+    formatString += item.name;
 
     if (index < lastIndex) {
-      formattedString += ', ';
+      formatString += ', ';
     } else if (index === lastIndex && data.length > 1) {
-      formattedString += ' and ';
+      formatString += ' and ';
     }
   });
 
-  return formattedString;
+  return formatString;
 }
 
 export const timestamp = () => {

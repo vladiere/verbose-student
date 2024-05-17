@@ -36,6 +36,8 @@ router.beforeEach((to: any, from: any, next: any) => {
   const auth = useAuthStore();
   if (to.meta.auth && !auth.isAuthenticated) {
     next({ name: 'login' })
+  } else if (!to.meta.auth && auth.isAuthenticated) {
+    next({ name: 'home_view' })
   } else {
     next()
   }

@@ -9,7 +9,7 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import appConfig from '../config/app.config.js';
 import { generateRandomString } from '../utils/generator.util.js';
 
-const spotifyApi = new SpotifyWebApi({
+let spotifyApi = new SpotifyWebApi({
   clientId: appConfig.spotify.client_id,
   clientSecret: appConfig.spotify.client_secret,
   redirectUri: appConfig.spotify.redirect_uri,
@@ -26,6 +26,12 @@ const auth = (req, res) => {
 }
 
 const login = (req, res) => {
+    const state = generateRandomString(16);
+  
+    return res.status(200).json({ data: spotifyApi.createAuthorizeURL(appConfig.spotify.scope, state) });
+}
+
+const getTokens = (req, res) => {
   const { code } = req.body;
 
   // Exchange the code for an access token and a refresh token.
@@ -49,9 +55,9 @@ const refresh = (req, res) => {
   const { refreshToken } = req.body;
 
   spotifyApi = new SpotifyWebApi({
-      clientId: config.spotify.client_id,
-      clientSecret: config.spotify.client_secret,
-      redirectUri: config.spotify.redirect_uri,
+      clientId: appConfig.spotify.client_id,
+      clientSecret: appConfig.spotify.client_secret,
+      redirectUri: appConfig.spotify.redirect_uri,
       refreshToken,
     });
 
@@ -101,17 +107,28 @@ const play = (req, res) => {
 
   // Send a request to Spotify to start playback of the track with the given URI.
   spotifyApi.play({ uris: [uri] }).then(() => {
-      return res.status(200).json({ msg: 'Playback started', stats: true });
+    return res.status(200).json({ msg: 'Playback started', stats: true });
   }).catch(err => {
-      console.error('Play Error:', err);
-      return res.status(500).json({ msg: 'Error occurred during playback', stats: false });
+    console.error('Play Error:', err);
+    return res.status(500).json({ msg: 'Error occurred during playback', stats: false });
   });
 }
 
-const getRecommendations = (req, res) => {
+const pause = (req, res) => {
+  spotifyApi.pause().then(() => {
+    return res.status(200).json({ msg: 'Playback started', stats: true });
+  }).catch(err => {
+    console.error('Pause Error:', err);
+    return res.status(500).json({ msg: 'Error occurred during pause', stats: false });
+  })
+}
 
-  spotifyApi.getMySavedTracks({ limit, offset }).then(data => {
+const getRecentlyPlayedTracks = (req, res) => {
+  const { limit } = req.query;
 
+  spotifyApi.getMyRecentlyPlayedTracks({ limit }).then(data => {
+
+    console.log(data.body.items)
     const result = data.body.items.map(item => {
       return {
         artist: item.track.artists,
@@ -120,11 +137,103 @@ const getRecommendations = (req, res) => {
         popularity: item.track.popularity,
         uri: item.track.uri,
       }
-    })
+    });
     return res.status(200).json({ result, stats: true });
   }).catch(err => {
     console.error('Error upon getMySavedTracks', err);
     return res.status(401).json({ msg: 'Error occurred during getting my saved tracks', stats: false });
+  })
+}
+
+const getDevices = (req, res) => {
+  spotifyApi.getMyDevices().then(data => {
+    let availableDevices = data.body.devices;
+    console.log(availableDevices);
+    return res.status(200).json({ devices: availableDevices, stats: 200 });
+  }).catch(err => {
+    console.error('Error upon getting devices: ', err);
+    return res.status(403).json({ msg: 'Error upon getting devices', stats: false, err });
+  })
+}
+
+const currentPlaybackState = (req, res) => {
+  spotifyApi.getMyCurrentPlaybackState().then(data => {
+    if (data.body && data.body.is_playing) {
+      console.log('User is currently playing music');
+      return res.status(200).json({ isPlaying: true, msg: 'Currently playing' })
+    } else {
+      console.log('User is currently playing music');
+      return res.status(200).json({ isPlaying: false, msg: 'Currently not playing' })
+    }
+  }).catch(err => {
+    console.error('Error on currentPlaybackState: ', err);
+    return res.status(403).json({ msg: 'Error getMyCurrentPlaybackState', stats: false, err });
+  })
+}
+
+const newReleases = (req, res) => {
+  const { limit, offset } = req.params;
+  
+  spotifyApi.getNewReleases({ limit, offset, country: 'PH' }).then(data => {
+    console.log(data);
+    return res.send('testing');
+  }).catch(err => {
+    console.error('Error on getting new releases: ', err);
+    return res.status(403).json({ msg: 'Error on getting new releases', stats: false });
+  })
+}
+
+const getUser = (req, res) => {
+  spotifyApi.getMe().then(data => {
+    return res.status(200).json({ user: data.body, stats: true });
+  }).catch(err => {
+    console.error("Error in getting user's data: ", err);
+    return res.status(403).json({ msg: 'Error in getting user data', stats: false });
+  })
+}
+
+const getPlaylistTracks = (req, res) => {
+  const { id } = req.query;
+  console.log(id);
+
+  spotifyApi.getPlaylistTracks(id, { offset: 1, limit: 5, fields: 'items' }).then(data => {
+    console.log(data);
+    return res.status(200).json({ data: data.body, stats: true });
+  }).catch(async err => {
+    console.error('Error on getting playlist tracks: ', err);
+
+    return res.status(403).json({ msg: 'Error on getting playlist tracks', stats: false });
+  })
+}
+
+const getSavedTracks = (req, res) => {
+  const { limit, offset } = req.body;
+
+  spotifyApi.getMySavedTracks( { limit, offset }).then(data => {
+    console.log(data.body);
+    const dataTracks = data.body.items.map(e => {
+      return {
+        image: e.track.album.images[0].url,
+        uri: e.track.uri,
+        name: e.track.name,
+        artists: e.track.artists.map(e => e.name),
+      }
+    })
+    return res.status(200).json({ dataTracks, data: data.body.items });
+  }).catch(err => {
+    console.error('Error in getting top artist: ', err);
+    return res.status(403).json({ msg: 'Error in getting top artists', stats: false });
+  })
+}
+
+const volume = (req, res) => {
+  const { vol } = req.body;
+
+  spotifyApi.setVolume(vol).then(() => {
+    return res.status(200).json({ stats: true });
+  }).catch(err => {
+    console.log('Error on setting volume: ', err);
+    return res.status(403).json({ msg: 'Error on setting volumne', stats: false });
   })
 }
 
@@ -134,5 +243,14 @@ export {
   search,
   refresh,
   play,
-  getRecommendations,
+  pause,
+  getRecentlyPlayedTracks,
+  getTokens,
+  newReleases,
+  currentPlaybackState,
+  getDevices,
+  getUser,
+  getPlaylistTracks,
+  getSavedTracks,
+  volume,
 }

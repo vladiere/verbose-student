@@ -34,3 +34,10 @@ export interface RoomNotify {
   username: string;
   message: string;
 }
+
+export interface Tracks {
+  artists: [];
+  image: string;
+  name: string;
+  uri: string;
+}
