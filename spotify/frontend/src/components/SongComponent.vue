@@ -32,6 +32,7 @@
   const songStore = useSongStore();
 
   const play = async (uri: string) => {
-    await songStore.playMusic(props.album_id);
+    console.log(props);
+    await songStore.playMusic(props.album_uri);
   }
 </script>

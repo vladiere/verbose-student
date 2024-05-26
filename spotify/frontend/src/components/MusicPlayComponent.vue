@@ -1,21 +1,21 @@
 <template>
   <div class="w-full p-3 flex items-center">
     <div class="grid grid-cols-3 items-center justify-center gap-5 w-full bg-neutral-800 p-2 rounded-lg">
-      <div class="col-span-2 flex flex-col gap-2 items-center justify-center">
-        <span class="text-sm font-semibold">Music title</span>
-        <div class="flex gap-2 items-center">
-          <button class="p-2">
-            <svg-icon type="mdi" :path="mdiSkipPrevious"></svg-icon>
-          </button>
-          <button class="p-2">
-            <svg-icon type="mdi" :path="`${ songStore.getIsPlaying ? mdiPause : mdiPlay }`"></svg-icon>
-          </button>
-          <button class="p-2">
-            <svg-icon type="mdi" :path="mdiSkipNext"></svg-icon>
-          </button>
-        </div>
-      </div>
-      <div class="col flex items-center">
+      <!-- <div class="col-span-2 flex flex-col gap-2 items-center justify-center"> -->
+      <!--   <span class="text-sm font-semibold">Music title</span> -->
+      <!--   <div class="flex gap-2 items-center"> -->
+      <!--     <button class="p-2"> -->
+      <!--       <svg-icon type="mdi" :path="mdiSkipPrevious"></svg-icon> -->
+      <!--     </button> -->
+      <!--     <button class="p-2"> -->
+      <!--       <svg-icon type="mdi" :path="`${ songStore.getIsPlaying ? mdiPause : mdiPlay }`"></svg-icon> -->
+      <!--     </button> -->
+      <!--     <button class="p-2"> -->
+      <!--       <svg-icon type="mdi" :path="mdiSkipNext"></svg-icon> -->
+      <!--     </button> -->
+      <!--   </div> -->
+      <!-- </div> -->
+      <div class="col flex items-center justify-end">
         <!-- Volume and other utilities bar -->
         <svg-icon
           type="mdi"

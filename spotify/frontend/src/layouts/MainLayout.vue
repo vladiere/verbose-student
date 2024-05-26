@@ -23,8 +23,9 @@
   import { useSocketStore } from '../stores/socket.store';
   import MusicPlayComponent from '../components/MusicPlayComponent.vue';
   import useSpotifyStore from '../stores/spotify.store';
-  import { Client } from 'spotify-api.js';
+  import useSongStore from '../stores/song.store';
 
+  const songStore = useSongStore();
   const spotifyStore = useSpotifyStore();
   const auth = useAuthStore();
   const socketStore = useSocketStore();
@@ -41,6 +42,7 @@
     try {
       await auth.handleLogout();
       router.push({ name: 'login' })
+      await songStore.pauseMusic();
     } catch (error) {
       console.error(error)
     }
@@ -59,8 +61,5 @@
       await spotifyStore.handleGetTokens(router.currentRoute.value.query.code);
     }
 
-    const client = new Client({ token: { clientID: '4871b59efd5449328229b5e6b51bc393', clientSecret: 'efcc186afead49b58c7ea5a8d6610bc3' } }) 
-    const device_id = await client.tracks.get('id')
-    console.log(device_id);
   })
 </script>

@@ -10,7 +10,7 @@ const useSpotifyStore = defineStore('spotify', {
   getters:
   {
     getAccessToken    : state => state.access_token,
-    getRefreshTokne   : state => state.refresh_token,
+    getRefreshToken   : state => state.refresh_token,
   },
   actions:
   {

@@ -23,6 +23,8 @@ const useSongStore = defineStore('song', {
     volume                      : 50,
     devices                     : [] as any,
     is_playing                  : false,
+    currentPlayback             : {} as any,
+    deviceId                    : '',
   }),
   getters:
   {
@@ -37,9 +39,17 @@ const useSongStore = defineStore('song', {
     getUserId                   : (state) => state.user_id,
     getDevices                  : (state) => state.devices,
     getIsPlaying                : (state) => state.is_playing,
+    getCurrentPlayback          : (state) => state.currentPlayback,
+    getDeviceId                 : (state) => state.deviceId,
   },
   actions:
   {
+    setDeviceId(device_id) {
+      this.deviceId = device_id;
+    },
+    setCurrentPlayback(data) {
+      this.currentPlayback = data;
+    },
     setUserPlaylist(playlists: any[])
     {
       this.listOfPlaylist = playlists;
@@ -171,7 +181,8 @@ const useSongStore = defineStore('song', {
     async playMusic(uri: string)
     {
       try {
-        // await axios.get(`/api/spotify/play?uri=${ uri }`);
+        const spotifyStore = useSpotifyStore();
+
         const options = {
             "context_uri": uri,
             "offset": {
@@ -179,6 +190,16 @@ const useSongStore = defineStore('song', {
             },
             "position_ms": 0
         }
+        console.log(uri);
+        await axios.put(`https://api.spotify.com/v1/me/player/play?device_id=${this.getDeviceId}`,
+          options,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${spotifyStore.getAccessToken}`
+            }
+          }
+        );
         spotifyApi.play(options, (data) => {
           console.log(data)
         });
@@ -219,8 +240,24 @@ const useSongStore = defineStore('song', {
     async setNewVolume(vol: number)
     {
       try {
-        console.log(vol);
         await axios.post('/api/spotify/volume', { vol } )
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getCurrentPlay() {
+      try {
+        const spotifyStore = useSpotifyStore();
+
+        const res = await axios.get("https://api.spotify.com/v1/me/player", {
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer ' + spotifyStore.getAccessToken
+          }
+        })
+        console.log(res);
+        this.setCurrentPlayback(res.data);
+        // console.log(this.currentPlayback);
       } catch (error) {
         console.error(error);
       }
