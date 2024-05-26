@@ -1,12 +1,10 @@
 // stores/spotify.ts
 import { defineStore } from 'pinia';
-import { SpotifyWebApi } from 'spotify-web-api-ts';
+import SpotifyWebApi from 'spotify-web-api-js';
 import useSpotifyStore from './spotify.store';
 import axios from 'axios';
 
-const spotifyStore = useSpotifyStore();
-
-const spotifyApi = new SpotifyWebApi({ accessToken: spotifyStore.getAccessToken });
+let spotifyApi = new SpotifyWebApi();
 
 const useSongStore = defineStore('song', {
   state: () => ({
@@ -173,10 +171,17 @@ const useSongStore = defineStore('song', {
     async playMusic(uri: string)
     {
       try {
-        // new Audio();
         // await axios.get(`/api/spotify/play?uri=${ uri }`);
-
-        spotifyApi.player.play();
+        const options = {
+            "context_uri": uri,
+            "offset": {
+                "position": 5
+            },
+            "position_ms": 0
+        }
+        spotifyApi.play(options, (data) => {
+          console.log(data)
+        });
       } catch (error) {
         console.error(error);
       }

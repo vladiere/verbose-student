@@ -23,6 +23,7 @@
   import { useSocketStore } from '../stores/socket.store';
   import MusicPlayComponent from '../components/MusicPlayComponent.vue';
   import useSpotifyStore from '../stores/spotify.store';
+  import { Client } from 'spotify-api.js';
 
   const spotifyStore = useSpotifyStore();
   const auth = useAuthStore();
@@ -57,5 +58,9 @@
     if (router.currentRoute.value.query.code) {
       await spotifyStore.handleGetTokens(router.currentRoute.value.query.code);
     }
+
+    const client = new Client({ token: { clientID: '4871b59efd5449328229b5e6b51bc393', clientSecret: 'efcc186afead49b58c7ea5a8d6610bc3' } }) 
+    const device_id = await client.tracks.get('id')
+    console.log(device_id);
   })
 </script>

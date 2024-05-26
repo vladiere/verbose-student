@@ -8,6 +8,7 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import appConfig from '../config/app.config.js';
 import { generateRandomString } from '../utils/generator.util.js';
+import Spotify from 'spotify-api.js';
 
 let spotifyApi = new SpotifyWebApi({
   clientId: appConfig.spotify.client_id,
@@ -145,11 +146,10 @@ const getRecentlyPlayedTracks = (req, res) => {
   })
 }
 
-const getDevices = (req, res) => {
+const getDevices = async (req, res) => {
   spotifyApi.getMyDevices().then(data => {
     let availableDevices = data.body.devices;
-    console.log(availableDevices);
-    return res.status(200).json({ devices: availableDevices, stats: 200 });
+    return res.status(200).json({ devices: availableDevices, stats: 200, device_id });
   }).catch(err => {
     console.error('Error upon getting devices: ', err);
     return res.status(403).json({ msg: 'Error upon getting devices', stats: false, err });
@@ -213,6 +213,7 @@ const getSavedTracks = (req, res) => {
     console.log(data.body);
     const dataTracks = data.body.items.map(e => {
       return {
+        album_uri: e.track.album.uri,
         image: e.track.album.images[0].url,
         uri: e.track.uri,
         name: e.track.name,

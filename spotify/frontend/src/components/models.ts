@@ -36,6 +36,7 @@ export interface RoomNotify {
 }
 
 export interface Tracks {
+  album_uri: string;
   artists: [];
   image: string;
   name: string;
