@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import axios from 'axios';
   import { useRouter } from 'vue-router';
 
@@ -50,4 +50,8 @@
     await auth.handleRegister(form.value);
     router.push({ name: 'home' });
   }
+
+  onMounted(async () => {
+    await auth.getCSRFToken();
+  })
 </script>

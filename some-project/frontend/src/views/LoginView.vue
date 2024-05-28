@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { ref, onMounted } from 'vue';
   import axios from 'axios';
   import { useRouter } from 'vue-router';
 
@@ -46,4 +46,8 @@
     btn_state.value = false;
     router.push({ name: 'home' });
   }
+
+  onMounted(async () => {
+    await auth.getCSRFToken();
+  })
 </script>
