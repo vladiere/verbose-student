@@ -1,14 +1,16 @@
 <template>
   <div v-if="!router.currentRoute.value.query.edit">
     <div class="h-full grow overflow-y-auto flex flex-col">
-      <div class="h-full grow overflow-y-auto grid grid-cols-4 gap-5">
-        <ThingsCardComponent v-for="(item, index) in things" :key="index" v-bind="item" @modal-state="modalState" />
+      <div class="h-full grow overflow-y-scroll">
+        <div class="grid grid-cols-4 gap-5">
+          <ThingsCardComponent v-for="(item, index) in things" :key="index" v-bind="item" @modal-state="modalState" />
+        </div>
       </div>
     </div>
     <ModalComponent v-if="show" @modal-state="modalState" :id="id" />
   </div>
 
-  <div v-else class="h-full w-full flex justify-center items-center">
+  <div v-else class="h-full w-full flex justify-center items-center grow overflow-y-scroll py-8">
       <div v-if="!showEdit" class="w-full md:w-1/2 flex flex-col items-center gap-5" autocomplete="off" >
         <h1 class="text-center text-2xl font-bold text-neutral-600 mb-6">UPDATE TODO</h1>
         <div class="flex flex-col gap-3 w-full">
@@ -17,7 +19,8 @@
         </div>
         <div class="flex flex-col gap-3 w-full">
           <label for="name" class="text-2xl font-semibold">Description</label>
-          <input type="text" name="description" id="description" class="w-full py-4 px-8 bg-neutral-200 dark:bg-neutral-600 placeholder:font-semibold rounded hover:ring-1 outline-blue-500" placeholder="Input description" v-model="thing.description" />
+          <textarea rows="4" name="description" id="description" class="w-full py-4 px-8 bg-neutral-200 dark:bg-neutral-600 placeholder:font-semibold rounded hover:ring-1 outline-blue-500" placeholder="Input description" v-model="thing.description" >
+          </textarea>
         </div>
         <div class="flex flex-col gap-3 w-full">
           <span class="text-2xl font-semibold text-neutral-900 dark:text-white">Status</span>

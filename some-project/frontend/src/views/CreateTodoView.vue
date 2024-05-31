@@ -8,7 +8,8 @@
         </div>
         <div class="flex flex-col gap-3 w-full">
           <label for="name" class="text-2xl font-semibold">Description</label>
-          <input type="text" name="description" id="description" class="w-full py-4 px-8 bg-neutral-200 dark:bg-neutral-600 placeholder:font-semibold rounded hover:ring-1 outline-blue-500" placeholder="Input description" v-model="form.description" />
+          <textarea rows="4" name="description" id="description" class="w-full py-4 px-8 bg-neutral-200 dark:bg-neutral-600 placeholder:font-semibold rounded hover:ring-1 outline-blue-500" placeholder="Input description" v-model="form.description" >
+          </textarea>
         </div>
         <button @click="handleCreateTodo" type="button" class="py-4 bg-blue-400 w-full rounded text-blue-50 font-bold hover:bg-blue-700 mt-4">ADD</button>
       </div>
